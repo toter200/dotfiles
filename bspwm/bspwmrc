@@ -1,0 +1,43 @@
+#! /bin/sh
+
+sxhkd &
+compton &
+
+bspc monitor -d Terminal Code Firefox Folder Games Music Lab
+
+bspc config border_width         2
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+wal -i /home/daniel/Pictures/Wallpaper/cpSkyline.jpg &
+
+volumeicon &
+nm-applet &
+polybar future &
+pulseaudio &
+
+
+#Border gaps,width, and padding
+bspc config border_width         0
+bspc config window_gap          25
+bspc config split_ratio          0.5
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+bspc config top_padding          20
+bspc config bottom_padding       10
+bspc config left_padding         10
+bspc config right_padding 		10
+
+
+bspc rule -a urxvt desktop='^1' follow=on
+bspc rule -a code desktop='^2' follow=on
+bspc rule -a Firefox desktop='^3'
+bspc rule -a Thunar desktop='^4'
+
+#Focus on pointer
+bspc config focus_follows_pointer true
+bspc config pointer_follows_focus true

@@ -1,0 +1,357 @@
+;-------------------------------------------------
+;                                                ;
+;           POLYBAR CONFIG FOR CYBERPUNK         ;
+;                                                ;
+;-------------------------------------------------
+
+;-------------------------------------------------
+;                                                ;
+;          			COLORS 				         ;
+;                                                ;
+;-------------------------------------------------
+[colors]
+background = #070015
+foreground = #798D8F 
+blue  = #244E64 
+white = #FFFFFF
+
+;-------------------------------------------------
+;                                                ;
+;          			BAR MODULE 				     ;
+;                                                ;
+;-------------------------------------------------
+[bar/future]
+width = 80%
+height = 40
+offset-x = 10%
+offset-y = 1%
+radius = 0.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+border-size = 2
+border-color = ${colors.foreground}
+
+modules-left = bspwm
+modules-center = date
+modules-right = cpu battery memory powermenu
+font-0 = "Unifont:size=12:weight=bold;2"
+font-1 = "FontAwesome:size=12;3"
+
+;-------------------------------------------------
+;                                                ;
+;          			BSPWM PARAMETERS 		     ;
+;                                                ;
+;-------------------------------------------------
+[module/bspwm]
+type = internal/bspwm
+pin-workspaces = true
+inline-mode = true
+enable-click = true
+enable-scroll = true
+reverse-scroll = true
+fuzzy-match = true
+
+;Dunno what this does
+format = <label-state>
+format-padding = 1
+
+ws-icon-0=Terminal;
+ws-icon-1=Code;
+ws-icon-2=Firefox;
+ws-icon-3=Folder;
+ws-icon-4=Games;
+ws-icon-5=Music;
+ws-icon-6=Lab;
+
+;NOTE: YOU CANNOT HAVE NAME AND ICON
+;TOGETHER ONLY ONE OR THE OTHER!!
+
+label-focused = %icon%
+label-focused-foreground = ${colors.blue} 
+label-focused-padding = 1
+
+label-occupied = %icon%
+label-occupied-foreground = ${colors.white}
+label-occupied-padding = 1
+
+label-empty = %icon%
+label-empty-foreground = ${colors.white}
+label-empty-padding = 1
+
+;-------------------------------------------------
+;                                                ;
+;          		DATE PARAMETERS		 		     ;
+;                                                ;
+;-------------------------------------------------
+[module/date]
+type = internal/date
+interval = 1.0
+date = %m-%d-%Y
+time = %r
+
+; if `date-alt` or `time-alt` is defined, clicking
+; the module will toggle between formats
+date-alt = %A, %d %B %Y
+time-alt = %r
+
+format =  <label>
+format-foreground = ${colors.white}
+
+label = %date% %time%
+label-foreground = ${colors.white}
+
+;-------------------------------------------------
+;                                                ;
+;          		POWER MENU PARAMETERS		 	 ;
+;                                                ;
+;-------------------------------------------------
+[module/powermenu]
+type = custom/menu
+
+format-spacing = 1
+label-open = 
+label-open-foreground = ${colors.white}
+label-close = 
+label-close-foreground = ${colors.blue}
+label-separator = |
+label-separator-foreground = ${colors.blue}
+label-open-padding = 2
+
+menu-padding = 2
+menu-0-padding = 1
+
+menu-0-0 = 
+menu-0-0-exec = reboot
+menu-0-1 = 
+menu-0-1-exec = poweroff
+
+menu-1-0 = 
+menu-1-0-exec = reboot
+menu-1-1 = 
+menu-1-1-exec = menu-open-0
+
+menu-2-0 = 
+menu-2-0-exec = poweroff
+menu-2-1 = 
+menu-2-1-exec = menu-open-0
+
+;-------------------------------------------------
+;                                                ;
+;          		CPU MODULE PARAMETERS		 	 ;
+;                                                ;
+;-------------------------------------------------
+[module/cpu]
+type = internal/cpu
+interval = 0.5
+
+format = <label> <ramp-coreload>
+label =:%percentage%%
+label-foreground = ${colors.white}
+
+ramp-coreload-0 = ▁
+ramp-coreload-1 = ▂
+ramp-coreload-2 = ▃
+ramp-coreload-3 = ▄
+ramp-coreload-4 = ▅
+ramp-coreload-5 = ▆
+ramp-coreload-6 = ▇
+ramp-coreload-7 = █
+
+;--------------USER DEFINED MODULES---------------
+;These modules require scripts to run, you can find
+;the scripts and how to run them here:
+;https://github.com/jaagr/polybar/wiki/User-contributed-modules
+
+;-------------------------------------------------
+;                                                ;
+;          		VOLUME PARAMETERS   		 	 ;
+;                                                ;
+;-------------------------------------------------
+
+[module/pavolume]
+type = custom/script
+interval = 2
+label=:%output%
+exec = ~/.config/polybar/pavolume.sh
+click-right = exec pavucontrol
+click-left = ~/.config/polybar/pavolume.sh --togmute
+scroll-up = ~/.config/polybar/pavolume.sh --up
+scroll-down = ~/.config/polybar/pavolume.sh --down
+label-padding = 2
+label-foreground = ${colors.white}
+
+;-------------------------------------------------
+;                                                ;
+;          		Battery PARAMETERS 		         ;
+;                                                ;
+;-------------------------------------------------
+[module/battery]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 99
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = AC
+
+; If an inotify event haven't been reported in this many
+; seconds, manually poll for new values.
+;
+; Needed as a fallback for systems that don't report events
+; on sysfs/procfs.
+;
+; Disable polling by setting the interval to 0.
+;
+; Default: 5
+poll-interval = 5
+
+; Default: %H:%M:%S
+time-format = %H:%M
+
+; Available tags:
+;   <label-charging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-charging>
+format-charging = <animation-charging> <label-charging>
+
+; Available tags:
+;   <label-discharging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-discharging>
+format-discharging = <ramp-capacity> <label-discharging>
+
+; Available tags:
+;   <label-full> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;format-full = <ramp-capacity> <label-full>
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current charge rate in watts)
+label-charging = %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging = %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+label-full = Fully charged
+
+; Only applies if <ramp-capacity> is used
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+; Only applies if <bar-capacity> is used
+bar-capacity-width = 10
+
+; Only applies if <animation-charging> is used
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+; Framerate in milliseconds
+animation-charging-framerate = 750
+
+; Only applies if <animation-discharging> is used
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-3 = 
+animation-discharging-4 = 
+; Framerate in milliseconds
+animation-discharging-framerate = 500
+
+;-------------------------------------------------
+;                                                ;
+;          		Memory PARAMETERS   		 	 ;
+;                                                ;
+;-------------------------------------------------
+[module/memory]
+type = internal/memory
+
+; Seconds to sleep between updates
+; Default: 1
+interval = 3
+label-foreground = ${colors.white}
+
+; Available tags:
+;   <label> (default)
+;   <bar-used>
+;   <bar-free>
+;   <ramp-used>
+;   <ramp-free>
+;   <bar-swap-used>
+;   <bar-swap-free>
+;   <ramp-swap-used>
+;   <ramp-swap-free>
+format = <label>
+
+; Available tokens:
+;   %percentage_used% (default)
+;   %percentage_free%
+;   %gb_used%
+;   %gb_free%
+;   %gb_total%
+;   %mb_used%
+;   %mb_free%
+;   %mb_total%
+;   %percentage_swap_used%
+;   %percentage_swap_free%
+;   %mb_swap_total%
+;   %mb_swap_free%
+;   %mb_swap_used%
+;   %gb_swap_total%
+;   %gb_swap_free%
+;   %gb_swap_used%
+
+label =  :  %percentage_used%
+
+; Only applies if <bar-used> is used
+bar-used-indicator =
+bar-used-width = 50
+bar-used-foreground-0 = #55aa55
+bar-used-foreground-1 = #557755
+bar-used-foreground-2 = #f5a70a
+bar-used-foreground-3 = #ff5555
+bar-used-fill = ▐
+bar-used-empty = ▐
+bar-used-empty-foreground = #444444
+
+; Only applies if <ramp-used> is used
+ramp-used-0 = ▁
+ramp-used-1 = ▂
+ramp-used-2 = ▃
+ramp-used-3 = ▄
+ramp-used-4 = ▅
+ramp-used-5 = ▆
+ramp-used-6 = ▇
+ramp-used-7 = █
+
+; Only applies if <ramp-free> is used
+ramp-free-0 = ▁
+ramp-free-1 = ▂
+ramp-free-2 = ▃
+ramp-free-3 = ▄
+ramp-free-4 = ▅
+ramp-free-5 = ▆
+ramp-free-6 = ▇
+ramp-free-7 = █
